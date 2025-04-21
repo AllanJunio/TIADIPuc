@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using YourProject.Data;
+using YourProject.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Add DbContext
+// Configure MySQL
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Register Services
+builder.Services.AddScoped<DatabaseService>();
+builder.Services.AddScoped<TransacaoService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<MetaFinanceiraService>();
+builder.Services.AddScoped<DashboardService>();
 
 // Add CORS
 builder.Services.AddCors(options =>
@@ -24,8 +33,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Add Swagger with enhanced configuration
-builder.Services.AddControllers();
+// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -41,15 +49,8 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Include XML comments if you have them
-    // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    // c.IncludeXmlComments(xmlPath);
-
-    // Configure schema IDs to avoid conflicts
     c.CustomSchemaIds(type => type.FullName);
 
-    // Add security definitions if needed
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme.",
@@ -77,9 +78,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
+// Configure Swagger for both Development and Production
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -88,7 +87,6 @@ app.UseSwaggerUI(c =>
     c.DocumentTitle = "Financial Management API Documentation";
     c.DefaultModelsExpandDepth(2);
 });
-//}
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");

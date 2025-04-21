@@ -135,3 +135,4 @@ C:\Users\allan\Downloads\devTIADI\project\obj\Debug\net8.0\refint\YourProject.dl
 C:\Users\allan\Downloads\devTIADI\project\obj\Debug\net8.0\YourProject.pdb
 C:\Users\allan\Downloads\devTIADI\project\obj\Debug\net8.0\YourProject.genruntimeconfig.cache
 C:\Users\allan\Downloads\devTIADI\project\obj\Debug\net8.0\ref\YourProject.dll
+C:\Users\allan\Downloads\devTIADI\project\obj\Debug\net8.0\YourProject.sourcelink.json

@@ -1,21 +1,21 @@
 import React from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Transacao } from '../types';
 
 interface TransacaoFormProps {
-  onSubmit: (data: Omit<Transacao, 'id' | 'user'>) => Promise<Transacao>;
+  onSubmit: (data: Omit<Transacao, 'id' | 'usuario'>) => Promise<void>;
 }
 
 export const TransacaoForm: React.FC<TransacaoFormProps> = ({ onSubmit }) => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<Omit<Transacao, 'id' | 'user'>>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  const onSubmitForm: SubmitHandler<Omit<Transacao, 'id' | 'user'>> = async (data) => {
+  const onSubmitForm = async (data: any) => {
     try {
       await onSubmit({
         ...data,
         valor: Number(data.valor)
       });
-      reset(); // Limpar o formulário após o submit
+      reset();
     } catch (err) {
       console.error('Erro ao submeter formulário:', err);
     }
@@ -31,7 +31,7 @@ export const TransacaoForm: React.FC<TransacaoFormProps> = ({ onSubmit }) => {
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         />
         {errors.descricao && (
-          <span className="text-red-500 text-sm">{errors.descricao.message}</span>
+          <span className="text-red-500 text-sm">{errors.descricao.message as string}</span>
         )}
       </div>
 
@@ -44,7 +44,7 @@ export const TransacaoForm: React.FC<TransacaoFormProps> = ({ onSubmit }) => {
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         />
         {errors.valor && (
-          <span className="text-red-500 text-sm">{errors.valor.message}</span>
+          <span className="text-red-500 text-sm">{errors.valor.message as string}</span>
         )}
       </div>
 
@@ -59,7 +59,7 @@ export const TransacaoForm: React.FC<TransacaoFormProps> = ({ onSubmit }) => {
           <option value="Despesa">Despesa</option>
         </select>
         {errors.tipo && (
-          <span className="text-red-500 text-sm">{errors.tipo.message}</span>
+          <span className="text-red-500 text-sm">{errors.tipo.message as string}</span>
         )}
       </div>
 
