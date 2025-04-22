@@ -6,6 +6,12 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Bind Kestrel settings from appsettings.json
+builder.WebHost.ConfigureKestrel((context, options) =>
+{
+    options.Configure(context.Configuration.GetSection("Kestrel"));
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 
